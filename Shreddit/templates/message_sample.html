@@ -1,0 +1,21 @@
+
+
+
+<div class="message">
+    <div class="message-header">
+        <img class="feed-block-group-image fl_l" src="{{ url_for('static', filename='img/default.png') }}">
+        <div class="flex">
+            <div class="message-sender">
+                {{ if user.id == current.user.id }}
+                    You
+                {{ else }}
+                    {{ user.name }}
+                {{ endif }}
+            </div>
+            <div class="date">{{ message.date }}</div>
+        </div>
+    </div>
+    <div class="message-content">{{ message.content }}</div>
+</div>
+
+

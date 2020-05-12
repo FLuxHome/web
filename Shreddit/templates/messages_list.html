@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+
+{% block title %}
+Messages - Shreddit
+{% endblock %}
+
+{% block content %}
+    <div class="message-column white-bg-color">
+        {% for friend in friends %}
+                <div class="conversation border-bottom" onclick="window.location.href='/chat/{{ friend.id }}'">
+                    <img class="feed-block-group-image border-bottom fl_l" src="{{ url_for('static', filename='img/default.png') }}">
+                    <div>
+                        <div>{{ friend.name }} {{ friend.surname }}</div>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+{% endblock %}

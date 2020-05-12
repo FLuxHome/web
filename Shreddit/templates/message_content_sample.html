@@ -1,0 +1,22 @@
+{% for message in message_list %}
+    <div class="message">
+        <div class="message-header">
+            <img class="feed-block-group-image fl_l" src="{{ url_for('static', filename='img/default.png') }}">
+            <div class="flex">
+                <div class="message-sender">
+                    {% if message.initiator == current_user.id %}
+                    <a href="/profile/{{ current_user.id }}">
+                        {{ current_user.name }} {{ current_user.surname }}
+                    </a>
+                    {% else %}
+                    <a href="/profile/{{ user.id }}">
+                    {{ user.name }} {{ user.surname }}
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="date">{{ message.date }}</div>
+            </div>
+        </div>
+        <div class="message-content">{{ message.content }}</div>
+    </div>
+{% endfor %}

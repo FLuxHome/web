@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <script src="https://kit.fontawesome.com/79bbc9e300.js" crossorigin="anonymous"></script>
+    <script role="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  </head>
+  <body class="main-page-body">
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-green fixed-top">
+        <div class="container">
+          <a class="navbar-brand margl" href="/">Shreddit</a>
+        </div>
+        <div class="account_forms"> 
+          {% if current_user.is_authenticated %}
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" href="/profile">Profile</a>
+              <a class="nav-item nav-link" href="/logout">Log Out</a>
+            </div>
+          {% else %}
+            <div class="navbar-nav">
+              <a class="nav-item nav-link" href="/login">Login</a>
+              <a class="nav-item nav-link" href="/register">Register</a>
+            </div>
+          {% endif %}
+        </div>
+      </nav>
+    </header>
+    <div class="site-content">
+      <div class="side-bar fl_l">
+        <a class="linker linker-hover no-select" href="/profile">
+          <div onmouseover="mouseOnBar(this)" id="profile" onmouseout="mouseOffBar(this)">
+            <i class="fas fa-house-user"></i>
+            My profile
+          </div>
+        </a>
+      <a class="linker linker-hover no-select" href="/messages">
+        <div onmouseover="mouseOnBar(this)" id="messages" onmouseout="mouseOffBar(this)">
+          <i class="fas fa-comments"></i>
+          Messages
+        </div>
+      </a>
+      <a class="linker linker-hover no-select" href="/friends">
+        <div onmouseover="mouseOnBar(this)" id="friends" onmouseout="mouseOffBar(this)">
+          <i class="fas fa-user-friends"></i>
+          Friends
+        </div>
+      </a>
+      </div>
+      {% block content %}
+      {% endblock %}
+    </div>
+    </div>
+    <script src="../static/js/custom_scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>

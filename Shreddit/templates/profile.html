@@ -1,0 +1,85 @@
+{% extends "main.html" %}
+
+{% block title %}
+Profile - Shreddit
+{% endblock %}
+
+{% block content %}
+    {% set user = args["user"] %}
+    <div class="profile-fix">
+        <div class="profile-wide-column fl_r" id="wideColumn">
+            <div class="profile white-bg-color rounded-border">
+                <div class="profile-header">
+                    <div class="profile-header-text border-bottom">{{ user.name }} {{ user.surname }}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-bday">
+                        <div class="feed-header-font fl_l" id="bday">Birthday</div>
+                        <div class="profile-bday-date fl_r">{{ user.birthday.date() }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="post-field white-bg-color rounded-border" id="to-reload">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="text-box">
+                        {% if form.text_field.errors %}
+                            {{ form.text_field(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.text_field.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.text_field(class="form-control form-control-lg", id="post-text") }}
+                        {% endif %}
+                    </div>
+                </form>
+                <div class="form-group">
+                    <button class="btn btn-outline-info fl_r post-button-fix" id="btnSubmit", onclick="createNewPost({{ user.id }}, {{ current_user.id }})">Post</button>
+                </div>
+            </div>
+            <div id="wallPosts" class="wallPosts"></div>
+        </div>
+        <div class="profile-narrow-column">
+            <div class="profile-img-container rounded-border white-bg-color">
+                <img src="{{ url_for('static', filename='img/default.png') }}" class="profile-img-fix">
+                {% if args["is_current_user"] %}
+                    <div class="add-friend">
+                        <button class="btn btn-primary dropdown-toggle set-width" type="button">Edit
+                    </div>
+                {% elif args["is_friends"] %}
+                    <div class="add-friend">
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle set-width" type="button" data-toggle="dropdown">You're friends
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu set-padding">
+                              <li>
+                                <div onmouseover="mouseOnBar(this)" onmouseout="mouseOffBar(this)" onclick="removeFriend({{ current_user.id }}, {{ args['user'].id }})">Unfriend</div>
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+                {% elif not args["is_friends"] and not args["is_following"]%}
+                    <div class="add-friend" id="follow">
+                    <button class="btn btn-primary set-width" type="button" id="add-friend" onclick="addFriendRequest({{ args['current_user'].id }}, {{ args['user'].id }})">Follow
+                            <span class="caret"></span>
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="add-friend">
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle set-width" type="button" data-toggle="dropdown">You're following
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu set-padding">
+                              <li>
+                                <div onmouseover="mouseOnBar(this)" onmouseout="mouseOffBar(this)">Stop following</div>
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+        </div>
+    </div>
+    <script src="../static/js/jQuerry.js"></script>
+{% endblock %}

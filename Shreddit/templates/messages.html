@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+
+{% block title %}
+Chat with {{ user.name }} {{ user.surname}}
+{% endblock %}
+
+{% block content %}
+    <div class="message-center">
+        <div class="message-column white-bg-color" id="message-column">
+            {% for message in message_list %}
+            <div class="message">
+                <div class="message-header">
+                    <img class="feed-block-group-image fl_l" src="{{ url_for('static', filename='img/default.png') }}">
+                    <div class="flex">
+                        <div class="message-sender">
+                            {% if message.initiator == current_user.id %}
+                            <a href="/profile/{{ current_user.id }}">
+                                {{ current_user.name }} {{ current_user.surname }}
+                            </a>
+                            {% else %}
+                            <a href="/profile/{{ user.id }}">
+                            {{ user.name }} {{ user.surname }}
+                            </a>
+                            {% endif %}
+                        </div>
+                        <div class="date">{{ message.date }}</div>
+                    </div>
+                </div>
+                <div class="message-content">{{ message.content }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <div>
+            <textarea class="form-control message-textarea fl_l" id="messagearea"></textarea>
+            <i class="fas fa-angle-right fl_r icon-extra" onmouseover="mouseOnBar(this)" onmouseout="mouseOffBar(this)" onclick="sendMessage({{ current_user.id }}, {{ user.id }})"></i>
+        </div>
+    </div>
+{% endblock %}

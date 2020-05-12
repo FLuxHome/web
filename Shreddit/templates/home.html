@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+
+{% block title %}
+Home Page - Shreddit
+{% endblock %}
+
+{% block content %}
+<div class="custom-column">
+    <div class="feed">
+        {% for post in posts %}
+        {% set post_id = post["id"] %}
+        {% set user_id = current_user.id %}
+        <div class="feed-block white-bg-color" id="id_{{ post_id }}">
+            <div class="feed-block-header white-bg-color">
+                <img class="feed-block-group-image" src="{{ url_for('static', filename='img/default.png') }}" style="float: left;">
+                <div class="feed-block-header-info" style="float: left;">
+                    <div class="feed-block-post-author">
+                        <div class="feed-block-group-posted feed-header-font post-author">{{ post["name"] }}</div>
+                    </div>
+                    <div class="feed-block-date-posted">
+                        <span class="feed-header-font">{{ post["time_created"] }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="feed-block-body white-bg-color">
+                {{ post["content"] }}
+            </div>
+            <div class="feed-block-footer">
+                <div class="likes fl_l">
+                    <i id="UpArrow{{ post_id }}" class="fas fa-angle-double-up" style="color: {{ post['color_up'] }};" onclick="return upArrowClicked('{{ post_id }}', '{{ user_id }}', '1')"></i>
+                    <div class="fl_r">{{ post["likes_amount"] }}</div>
+                </div>
+                <div class="dislikes fl_l">
+                    <i id="DownArrow{{ post_id }}" class="fas fa-angle-double-down" style="color: {{ post['color_down'] }};" onclick="return downArrowClicked('{{ post_id }}', '{{ user_id }}', '2')"></i>
+                    <div class="fl_r">{{ post["dislikes_amount"] }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

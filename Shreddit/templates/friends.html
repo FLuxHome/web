@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="custom-column">
+        <div class="feed white-bg-color">
+            {% if follow_list|length > 0 %}
+            <div class="friend-pending border-bottom">
+                <div class="profile-header-text">Friend Requsets:</div>
+                {% for item in follow_list %}
+                    <div class="friend-bar border-bottom">
+                        <div class="dropdown fl_r">
+                            <button class="btn btn-primary friend-bar-dropdown" type="button" data-toggle="dropdown">
+                                <i class="fas fa-caret-down"></i>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu set-padding no-select">
+                                <li>
+                                  <div onmouseover="mouseOnBar(this)" onmouseout="mouseOffBar(this)" onclick="addFriend({{ current_user.id }}, {{ item['user'].id }})">Add Friend</div>
+                                  <div onmouseover="mouseOnBar(this)" onmouseout="mouseOffBar(this)" onclick="removeFriend({{ current_user.id }}, {{ item['user'].id }})">Decline</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <img class="feed-block-group-image fl_l" src="{{ url_for('static', filename='img/default.png') }}">
+                        <div class="friend-bar-info">
+                            <div class="fl_l">{{ item["user"].name }} {{ item["user"].surname }}</div><br>
+                            <a href="/chat/{{ item['user'].id }}">
+                                <div class="fl_l">Write message</div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if friend_list|length > 0 %}
+            <div class="friends">
+                <div class="profile-header-text">Your friends:</div>
+                {% for item in friend_list %}
+                <div class="friend-bar border-bottom">
+                    <div class="dropdown fl_r">
+                        <button class="btn btn-primary friend-bar-dropdown" type="button" data-toggle="dropdown">
+                            <i class="fas fa-caret-down"></i>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu set-padding no-select">
+                            <li>
+                              <div onmouseover="mouseOnBar(this)" onmouseout="mouseOffBar(this)" onclick="removeFriend({{ current_user.id }}, {{ item['user'].id }})">Unfriend</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="/profile/{{ item['user'].id }}">
+                        <img class="feed-block-group-image fl_l" src="{{ url_for('static', filename='img/default.png') }}">
+                    </a>
+                    <div class="friend-bar-info">
+                        <div class="fl_l">{{ item["user"].name }} {{ item["user"].surname }}</div><br>
+                        <a href="/chat/{{ item['user'].id }}">
+                            <div class="fl_l">Write message</div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
