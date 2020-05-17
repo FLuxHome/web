@@ -2,7 +2,7 @@ from flask import render_template, redirect, flash, url_for, request
 from sqlalchemy.orm.exc import NoResultFound
 from flask_login import current_user, login_required, login_user, logout_user
 from Shreddit.wtforms import LoginForm, RegistrationForm, PostForm
-from Shreddit.orm_forms import User, Post, Like, DisLike, Friend, Message
+from Shreddit.orm_forms import User, Post, Like, DisLike, Friend, Message, Comment
 from Shreddit import db, bcrypt_flask, app
 from datetime import datetime
 
@@ -129,6 +129,44 @@ def update_post():
     return get_post(post, single=True)
 
 
+@app.route("/new_comment", methods=["POST"])
+def create_comment():
+    ans = request.get_data().decode("UTF-8")
+    comment, post_id, user_id = list(item.split("=")[1] for item in ans.split("&"))
+    new_comment = Comment(content=comment, post_id=post_id, posted_by=user_id)
+
+    db.session.add(new_comment)
+    db.session.commit()
+
+    print(ans)
+
+    return ""
+
+
+@app.route("/update_comment", methods=["POST"])
+def update_comment():
+    ans = request.get_data().decode("UTF-8")
+    comment_id, user_id, action, key = list(item.split("=")[1] for item in ans.split("&"))
+    comment_id, user_id, action = int(comment_id), int(user_id), int(action)
+    comment = Comment.query.filter_by(id=comment_id).one()
+    if action == 1 and user_id in [item.liked_by for item in comment.likes]:
+        like = Like.query.filter_by(liked_by=user_id, comment_id=comment_id).one()
+        db.session.delete(like)
+    elif action == 2 and user_id in [item.disliked_by for item in comment.dislikes]:
+        dislike = DisLike.query.filter_by(disliked_by=user_id, comment_id=comment_id).one()
+        db.session.delete(dislike)
+    elif action == 1:
+        like = Like(liked_by=user_id, comment_id=comment_id, post_id=None)
+        db.session.add(like)
+    elif action == 2:
+        dislike = DisLike(disliked_by=user_id, comment_id=comment_id, post_id=None)
+        db.session.add(dislike)
+
+    db.session.commit()
+
+    return ""
+
+
 @app.route("/new_post", methods=["POST"])
 def create_new_post():
     ans = request.get_data().decode("UTF-8")
@@ -241,6 +279,21 @@ def send_message():
     return render_template("message_content_sample.html", message_list=message_list, user=partner)
 
 
+@app.route("/get_comments", methods=["POST"])
+def get_comments():
+    ans = request.get_data().decode("UTF-8")
+    post_id = [item.split("=")[1] for item in ans.split("&")][0]
+    comment_data = []
+    post = Post.query.filter_by(id=int(post_id)).one()
+    for comment in post.comments:
+        user = User.query.filter_by(id=comment.posted_by).one()
+        name = user.name + ' ' + user.surname
+        comment_data.append({"id": comment.id, "name": name, "body": comment.content,
+                             "likes_amount": len(comment.likes), "dislikes_amount": len(comment.dislikes)})
+
+    return render_template("comments.html", comments=comment_data, post_id=post_id)
+
+
 def get_post(post, single=False, raw=False):
     posted_by = User.query.filter_by(id=post.posted_by).one()
 
@@ -296,6 +349,13 @@ def like_handler(post_id, user_id, action, key):
     db.session.add(obj)
     db.session.commit()
 
+
+def comment_like_handler(comment_id, user_id, action, key):
+    if key != "879858348c418a0b743175365355f403f12e7655d9534c03a13ccb3e85043b14":
+        return
+
+    comment = Comment.query.filter_by(id=comment_id).one()
+    print(comment.likes)
 
 def check_comms(user):
     is_following, is_friends = False, False

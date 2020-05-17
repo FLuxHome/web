@@ -12,10 +12,10 @@
             </div>
         </div>
     </div>
-    <div class="feed-block-body white-bg-color">
+    <div class="feed-block-body white-bg-color border-bottom">
         {{ post["content"] }}
     </div>
-    <div class="feed-block-footer">
+    <div class="feed-block-footer border-bottom">
         <div class="likes fl_l">
             <i id="UpArrow{{ post_id }}" class="fas fa-angle-double-up" style="color: {{ post['color_up'] }};" onclick="return upArrowClicked('{{ post_id }}', '{{ user_id }}', '1')"></i>
             <div class="fl_r">{{ post["likes_amount"] }}</div>
@@ -24,5 +24,10 @@
             <i id="DownArrow{{ post_id }}" class="fas fa-angle-double-down" style="color: {{ post['color_down'] }};" onclick="return downArrowClicked('{{ post_id }}', '{{ user_id }}', '2')"></i>
             <div class="fl_r">{{ post["dislikes_amount"] }}</div>
         </div>
+        <div class="comments fl_l">
+            <i onclick="getComments({{ post_id }})" id="CommentIcon{{ post_id }}" class="far fa-comment-alt"></i>
+            <div class="fl_r">{{ post["comments_amount"] }}</div>
+        </div>
+    </div>
     </div>
 </div>

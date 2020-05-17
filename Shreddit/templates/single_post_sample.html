@@ -23,4 +23,8 @@
         <i id="DownArrow{{ post_id }}" class="fas fa-angle-double-down" style="color: {{ post['color_down'] }};" onclick="return downArrowClicked('{{ post_id }}', '{{ user_id }}', '2')"></i>
         <div class="fl_r">{{ post["dislikes_amount"] }}</div>
     </div>
+    <div class="comments fl_l">
+        <i id="CommentIcon{{ post_id }}" class="far fa-comment-alt"></i>
+        <div class="fl_r">{{ post["comments_amount"] }}</div>
+    </div>
 </div>

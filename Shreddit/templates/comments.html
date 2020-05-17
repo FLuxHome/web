@@ -1,0 +1,30 @@
+<div class="comment-section">
+    {% for comment in comments %}
+    {% set user_id = current_user.id %}
+    <div class="comment border-bottom">
+        <img class="feed-block-comment-image" src="{{ url_for('static', filename='img/default.png') }}" style="float: left;">
+        <div class="comment-main">
+            <div class="comment-header">
+                {{ comment["name"] }}
+            </div>
+            <div class="comment-body">
+                {{ comment["body"] }}
+            </div>
+            <div class="comment-footer">
+                <div class="likes fl_l">
+                    <i id="UpCommentArrow{{ comment['id'] }}" class="fas fa-angle-double-up" onclick="return upArrowCommentClicked({{ comment['id'] }}, {{ user_id }}, '1')"></i>
+                    <div class="fl_r">{{ comment["likes_amount"] }}</div>
+                </div>
+                <div class="dislikes fl_l">
+                    <i id="DownCommentArrow{{ comment['id'] }}" class="fas fa-angle-double-down" onclick="return downArrowCommentClicked({{ comment['id'] }}, {{ user_id }}, '2')"></i>
+                    <div class="fl_r">{{ comment["dislikes_amount"] }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="write-comment">
+        <textarea class="form-control comment-textarea fl_l" id="textAreaComments" rows="1"></textarea>
+        <button class="btn btn-outline-info fl_r comment-btn-fix" id="btnSubmit", onclick="createNewComment({{ post_id }}, {{ current_user.id }})">OK</button>
+    </div>
+</div>
